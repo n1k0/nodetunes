@@ -1,3 +1,5 @@
 h2 "Not found, dude."
-
-blockquote @message if @message?
+p "The resource you requested could not be found."
+if @message
+    h3 "Technical details"
+    blockquote @message

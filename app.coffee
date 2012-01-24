@@ -4,16 +4,7 @@ express = require "express"
 mongoose = require "mongoose"
 routes = require "./routes"
 coffeekup = require "coffeekup"
-
-class NotFound extends Error
-    constructor: (@path) ->
-        @.name = "NotFound"
-        if path
-            Error.call @, "Cannot find #{path}"
-            @.path = path
-        else
-            Error.call @, "Not Found"
-        Error.captureStackTrace @, arguments.callee
+NotFound = require("./lib/errors").NotFound
 
 app = module.exports = express.createServer()
 
@@ -36,9 +27,18 @@ app.configure "development", ->
 
 app.configure "production", ->
     mongoose.connect 'mongodb://localhost/nodetunes'
-    @use express.errorHandler()
+    # error handling
+    @error (err, req, res, next) ->
+        if err instanceof NotFound
+            return res.render '404',
+                status: 404
+                error: err
+                message: err.path
+                title: '404 Not Found'
+        next err
 
 app.dynamicHelpers
+    helpers: (req, res) -> require "./lib/helpers"
     get_messages: (req, res) -> req.flash()
     session: (req, res) -> req.session
 
@@ -47,16 +47,8 @@ app.get "/add", routes.add
 app.post "/add", routes.add
 app.get "/fortune/:fortuneId", routes.show
 
-app.error (err, req, res, next) ->
-    if err instanceof NotFound
-        return res.render '404',
-            status: 404,
-            error: err,
-            title: '404 Error - Page Not Found'
-    next err
-
 # app.param 'fortuneId', (req, res, next, id) ->
-#     fortunes = require("./models/fortune").fortunes
+#     Fortune = require("./models/Fortune")
 #     if not fortunes.find ~~id
 #         return res.render "404",
 #             status: 404

@@ -1,18 +1,29 @@
 form action: "/add", method: "post", ->
-    if Object.keys(@form.errors).length
+    if @form.valid is false
         div class: "alert-message block-message error", ->
-            p "Errors have been encountered"
+            p "Errors have been encountered; please fix the field values highlighted in red."
     fieldset ->
+        legend @title
         div class: "clearfix" + (if @form.errors.title? then " error" else ""), ->
             label for: "title", -> "Title"
             div class: "input", ->
-                input type: "text", name: "fortune[title]", id: "title", value: @form.values.title
-                p @form.errors.title if @form.errors.title?
+                input
+                    type:  "text"
+                    class: "xlarge"
+                    name:  "fortune[title]"
+                    id:    "title"
+                    placeholder: "A funny one"
+                    value: @form.values.title
+                if @form.errors.title
+                    span class: "help-inline", -> @form.errors.title
         div class: "clearfix" + (if @form.errors.content? then " error" else "") , ->
             label for: "content", -> "Content"
             div class: "input", ->
-                textarea name: "fortune[content]", id: "content", ->
+                textarea class: "xxlarge", name: "fortune[content]", id: "content", placeholder: "<john> Booh", ->
                     @form.values.content
-                p @form.errors.content if @form.errors.content?
-        div class: "clearfix", ->
+                # span class: "help-block", ->
+                #     "Paste your quote using the following format"
+                if @form.errors.content
+                    span class: "help-inline", -> @form.errors.content
+        div class: "actions", ->
             button type: "submit", class: "btn primary", -> "Submit"

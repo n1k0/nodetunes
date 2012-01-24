@@ -1,10 +1,13 @@
 Fortune = require "../models/Fortune"
 Form = require("../forms/Form").Form
+NotFound = require("../lib/errors").NotFound
 
 exports.index = (req, res) ->
-    Fortune.find {}, (err, fortunes) ->
+    Fortune.find({}).sort("date", -1).execFind (err, fortunes) ->
+        if err
+            throw new NotFound "Fortunes not found"
         res.render "index",
-            title: "NodeTunes",
+            title: "Home",
             fortunes: fortunes
 
 exports.add = (req, res) ->
@@ -16,15 +19,17 @@ exports.add = (req, res) ->
     form.bind req.body.fortune
     form.save (err) ->
         if err
-            req.flash "error", "Unable to save fortune"
+            req.flash "warning", "Unable to save fortune"
             stdRes form
         else
             req.flash "info", "Fortune added"
             res.redirect "/"
 
 exports.show = (req, res) ->
-    Fortune.findById req.param('fortuneId'), (err, fortune) ->
+    id = req.param('fortuneId')
+    Fortune.findById id, (err, fortune) ->
+        if err
+            throw new NotFound "Fortune with id=#{id} not found"
         res.render "show",
             fortune: fortune
-            fortunize: require("../lib/helpers").fortunize
             title: fortune.title
