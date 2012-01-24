@@ -26,10 +26,10 @@ exports.add = (req, res) ->
             res.redirect "/"
 
 exports.show = (req, res) ->
-    id = req.param('fortuneId')
-    Fortune.findById id, (err, fortune) ->
-        if err
-            throw new NotFound "Fortune with id=#{id} not found"
+    slug = req.param 'fortune_slug'
+    Fortune.findOne(slug: slug).sort("date", -1).execFind (err, fortunes) ->
+        if fortunes.length is 0 or err
+            throw new NotFound "Fortune with slug=#{slug} not found"
         res.render "show",
-            fortune: fortune
-            title: fortune.title
+            fortune: fortunes[0]
+            title: fortunes[0].title

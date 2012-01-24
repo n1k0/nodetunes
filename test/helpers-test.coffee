@@ -1,7 +1,7 @@
 ck = require "coffeekup"
 helpers = require "../lib/helpers"
 
-describe 'extractFortuneData()', ->
+describe 'extractFortuneData', ->
     extractFortuneData = helpers.extractFortuneData
     it "should parse a simple quote", ->
         (extractFortuneData "<niko> plop\n<john> plip").should.eql [
@@ -15,12 +15,12 @@ describe 'extractFortuneData()', ->
             {nick: "john", quote: "plip"},
         ]
     it "should parse a complex line", ->
-        (extractFortuneData "<niko> plop said <htlm> is a bad tag\n<john> lol").should.eql [
-            {nick: "niko", quote: "plop said <htlm> is a bad tag"},
+        (extractFortuneData "<niko> plop said <html> is a bad tag\n<john> lol").should.eql [
+            {nick: "niko", quote: "plop said <html> is a bad tag"},
             {nick: "john", quote: "lol"},
         ]
 
-describe 'fortunize()', ->
+describe 'fortunize', ->
     fortunize = helpers.fortunize
     it "should parse a simple quote", ->
         rendered = fortunize "<niko> plop <plop>\njohn enters the chan <chan>\n<john> plip <plip>"
@@ -33,7 +33,19 @@ describe 'fortunize()', ->
                 dt class: "odd",  -> h "<john>"
                 dd class: "odd",  -> q -> h "plip <plip>"
 
-describe 'timeAgoInWords()', ->
+describe 'slugify', ->
+    slugify = helpers.slugify
+    it "should slugify strings", ->
+        cases =
+            "a string":    "a-string"
+            "Anoth€r One": "anothr-one"
+            " FOO_!?BaR ": "foo-bar"
+        for _case of cases
+            (slugify _case).should.equal cases[_case]
+    it "should slugify even unslugifiable stuff", ->
+        (slugify "?;?;?").length.should.not.equal 0
+
+describe 'timeAgoInWords', ->
     timeAgoInWords = helpers.timeAgoInWords
     oneminute = 60000
     onehour   = 60 * oneminute

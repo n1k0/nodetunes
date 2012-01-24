@@ -3,8 +3,10 @@ util = require "util"
 
 extractFortuneData = (source) ->
     data = []
+    if not source
+        return data
     for line in source.split '\n'
-        match = /^<(.+)>\s?(.+)\n?/gm.exec line.trim()
+        match = /^<(.*?)>\s?(.*)\n?/.exec line.trim()
         nick = ""
         if match
             nick =  match[1]
@@ -30,6 +32,18 @@ fortunize = (source) ->
                     dd class: className, -> h line.quote
     ck.render(tpl, lines: extractFortuneData source)
 exports.fortunize = fortunize
+
+slugify = (text) ->
+    text = text.replace /[^\w\s-]/g, ''
+    text = text.trim()
+    text = text.toLowerCase()
+    text = text.replace /[_-\s ]+/g, '-'
+    text = text.replace ' ', ''
+    if not text
+        rchar = -> String.fromCharCode(Math.round(Math.random() * 26) + 65)
+        text += rchar() for i in [0..8]
+    text.toLowerCase()
+exports.slugify = slugify
 
 timeAgoInWords = (to, from) ->
     from ?= new Date

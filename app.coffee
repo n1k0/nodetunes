@@ -45,16 +45,7 @@ app.dynamicHelpers
 app.get "/", routes.index
 app.get "/add", routes.add
 app.post "/add", routes.add
-app.get "/fortune/:fortuneId", routes.show
-
-# app.param 'fortuneId', (req, res, next, id) ->
-#     Fortune = require("./models/Fortune")
-#     if not fortunes.find ~~id
-#         return res.render "404",
-#             status: 404
-#             title: "Fortune not found"
-#             message: "Fortune with id=#{id} not found"
-#     next()
+app.get "/fortune/:fortune_slug", routes.show
 
 app.listen 3000
 console.log "Server listening on port #{app.address().port} in #{app.settings.env} mode"

@@ -1,9 +1,10 @@
 doctype 5
 html ->
     head ->
-        meta charset: 'utf-8'
+        meta charset: "utf-8"
         title if @title then "#{@title} | NodeTunes" else "NodeTunes"
-        link rel: 'stylesheet', href: 'http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css'
+        link rel: "stylesheet", href: "http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css"
+        link rel: "stylesheet", href: "/stylesheets/nodetunes.css"
     body ->
         div class: "topbar", "data-scrollspy": "scrollspy", ->
             div class: "topbar-inner", ->
