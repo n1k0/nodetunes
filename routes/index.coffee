@@ -27,9 +27,9 @@ exports.add = (req, res) ->
 
 exports.show = (req, res) ->
     slug = req.param 'fortune_slug'
-    Fortune.findOne(slug: slug).sort("date", -1).execFind (err, fortunes) ->
-        if fortunes.length is 0 or err
+    Fortune.findOne slug: slug, (err, fortune) ->
+        if not fortune or err
             throw new NotFound "Fortune with slug=#{slug} not found"
         res.render "show",
-            fortune: fortunes[0]
-            title: fortunes[0].title
+            fortune: fortune
+            title: fortune.title

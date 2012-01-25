@@ -38,7 +38,6 @@ slugify = (text) ->
     text = text.trim()
     text = text.toLowerCase()
     text = text.replace /[_-\s ]+/g, '-'
-    text = text.replace ' ', ''
     if not text
         rchar = -> String.fromCharCode(Math.round(Math.random() * 26) + 65)
         text += rchar() for i in [0..8]
