@@ -1,13 +1,32 @@
 #!/usr/bin/env coffee
 
-coffeekup = require "coffeekup"
-express   = require "express"
-mongoose  = require "mongoose"
-routes    = require "./routes"
-NotFound  = require("./lib/errors").NotFound
+coffeekup  = require "coffeekup"
+mongoStore = require "connect-mongodb"
+express    = require "express"
+mongoose   = require "mongoose"
+routes     = require "./routes"
+{NotFound} = require "./lib/errors"
 
 app = module.exports = express.createServer()
 
+# Configuring the *development* environment.
+app.configure "development", ->
+    @set "db-uri", "mongodb://localhost/nodetunes-dev"
+    # Pretty HTML formatting
+    @set "view options", format: true
+    @use express.errorHandler
+        dumpExceptions: true
+        showStack: true
+
+# Configuring the *production* environment.
+app.configure "production", ->
+    @set "db-uri", "mongodb://localhost/nodetunes"
+    @use express.session
+        store: mongoStore(@set "db-uri")
+        secret: "rocknroll"
+    @use express.errorHandler()
+
+# Standard configuration.
 app.configure ->
     @set "views", "#{__dirname}/views"
     @set "view engine", "coffee"
@@ -18,17 +37,7 @@ app.configure ->
     @use express.session(secret: "rocknroll")
     @use @router
     @use express.static "#{__dirname}/public"
-
-app.configure "development", ->
-    mongoose.connect 'mongodb://localhost/nodetunes-dev'
-    @use express.errorHandler
-        dumpExceptions: true
-        showStack: true
-
-app.configure "production", ->
-    mongoose.connect 'mongodb://localhost/nodetunes'
-    # error handling
-    @use express.errorHandler()
+    mongoose.connect @set "db-uri"
 
 app.error (err, req, res, next) ->
     if err instanceof NotFound

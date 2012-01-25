@@ -1,6 +1,6 @@
-Fortune = require "../models/Fortune"
-Form = require("../lib/form").Form
-NotFound = require("../lib/errors").NotFound
+Fortune    = require "../models/Fortune"
+{Form}     = require "../lib/form"
+{NotFound} = require "../lib/errors"
 
 exports.index = (req, res, next) ->
     Fortune.find({}).sort("date", -1).execFind (err, fortunes) ->
