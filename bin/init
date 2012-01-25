@@ -1,0 +1,36 @@
+#!/usr/bin/env coffee
+
+mongoose = require "mongoose"
+mongoose.connect 'mongodb://localhost/nodetunes-dev'
+
+Fortune = require "../models/Fortune"
+
+fixtures =
+    f1:
+        title: "First fortune"
+        content: """
+                 <niko> Hello!
+                 <dave> Hello.
+                 """
+    f2:
+        title: "Second fortune"
+        content: """
+                 <bob> I'm so happy this works
+                 joe enters the room
+                 <joe> Me neither actually.
+                 joe left the room
+                 """
+
+Fortune.remove ->
+    processed = 0
+    for fixtureName of fixtures
+        new Fortune(fixtures[fixtureName]).save (err, f) ->
+            if err
+                console.error "Errors encountered"
+                for error of err.errors
+                    console.error "- #{error}: #{err.errors[error].type}"
+            else
+                console.log "Fixture saved: '#{f.title}'"
+            if ++processed == Object.keys(fixtures).length
+                console.log "Processed #{processed} fixtures."
+                process.exit()

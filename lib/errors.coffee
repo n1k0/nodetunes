@@ -1,11 +1,6 @@
-class NotFound extends Error
-    constructor: (@path) ->
+exports.NotFound = class extends Error
+    name = "NotFound"
+    constructor: (@message) ->
         @.name = "NotFound"
-        if path
-            Error.call @, "Cannot find #{path}"
-            @.path = path
-        else
-            Error.call @, "Not Found"
+        Error.call @, @message
         Error.captureStackTrace @, arguments.callee
-
-exports.NotFound = NotFound

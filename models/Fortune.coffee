@@ -18,6 +18,9 @@ Fortune = new mongoose.Schema
             (v) -> v.length >= 3 and v.length <= 255,
             "Slug length must be comprised between 3 and 255 chars"
         ]
+        index:
+            unique: true
+            sparse: true
     content:
         type: String
         trim: true
@@ -34,5 +37,8 @@ Fortune = new mongoose.Schema
 Fortune.pre 'validate', (next) ->
     @slug = slugify @title
     next()
+
+Fortune.statics.findOneBySlug = (slug, callback) ->
+    @findOne slug: slug, callback
 
 module.exports = mongoose.model 'Fortune', Fortune

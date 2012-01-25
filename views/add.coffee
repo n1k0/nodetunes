@@ -15,7 +15,7 @@ form action: "/add", method: "post", ->
                     placeholder: "A funny one"
                     value: @form.values.title
                 if @form.errors.title
-                    span class: "help-inline", -> @form.errors.title
+                    span class: "help-block", -> @form.errors.title
         div class: "clearfix" + (if @form.errors.content? then " error" else "") , ->
             label for: "content", -> "Content"
             div class: "input", ->
@@ -24,6 +24,6 @@ form action: "/add", method: "post", ->
                 # span class: "help-block", ->
                 #     "Paste your quote using the following format"
                 if @form.errors.content
-                    span class: "help-inline", -> @form.errors.content
+                    span class: "help-block", -> @form.errors.content
         div class: "actions", ->
             button type: "submit", class: "btn primary", -> "Submit"
