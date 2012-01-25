@@ -1,3 +1,5 @@
+# adapted from https://github.com/twilson63/cakefile-template, thanks!
+
 fs            = require 'fs'
 {print}       = require 'util'
 {spawn, exec} = require 'child_process'
@@ -21,14 +23,18 @@ build = (watch, callback) ->
     coffee = spawn 'coffee', options
     coffee.stdout.on 'data', (data) -> print data.toString()
     coffee.stderr.on 'data', (data) -> log data.toString(), red
-    coffee.on 'exit', (status) -> callback?() if status is 0
+    coffee.on 'exit', (status) ->
+        if status is 0
+            log "Sources compiled ok :)", green
+            if callback? then callback()
 
 test = (callback) ->
-    spec = spawn 'node_modules/.bin/mocha'
-    spec.stdout.on 'data', (data) -> print data.toString()
-    spec.stderr.on 'data', (data) -> log data.toString(), red
-    spec.on 'exit', (status) -> callback?() if status is 0
-
+    command = "node_modules/.bin/_mocha --require should -R spec lib/test/*.js"
+    mocha = exec command, (err, stdout, stderr) ->
+        if err then print err, red
+    mocha.stdout.on 'data', (data) -> print data.toString()
+    mocha.stderr.on 'data', (data) -> log data.toString(), red
+    mocha.on 'exit', (status) -> callback?() if status is 0
 
 task 'docs', 'Generate annotated source code with Docco', ->
     fs.readdir 'src', (err, contents) ->
@@ -44,4 +50,10 @@ task 'build', 'Build current project', ->
     build -> log ":)", green
 
 task 'test', 'Run test suite', ->
-    test -> log ":)", green
+    build -> test -> log ":)", green
+
+task 'server', 'Start server', ->
+    build -> require "./lib/index.js"
+
+task 'watch', 'Recompile CoffeeScript source files when modified', ->
+    build true

@@ -1,5 +1,3 @@
-#!/usr/bin/env coffee
-
 coffeekup  = require "coffeekup"
 mongoStore = require "connect-mongodb"
 express    = require "express"
@@ -28,7 +26,7 @@ app.configure "production", ->
 
 # Standard configuration.
 app.configure ->
-    @set "views", "#{__dirname}/views"
+    @set "views", "#{__dirname}/../src/views" # oddity
     @set "view engine", "coffee"
     @register '.coffee', coffeekup.adapters.express
     @use express.bodyParser()
