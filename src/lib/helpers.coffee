@@ -1,6 +1,7 @@
 ck   = require "coffeekup"
 util = require "util"
 
+# Extracts a fortune data structure from a source text.
 extractFortuneData = (source) ->
     data = []
     if not source

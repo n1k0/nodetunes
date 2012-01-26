@@ -15,6 +15,7 @@
         "mongoose": "2.4.10"
     },
     "devDependencies": {
+        "docco": "0.3.0",
         "mocha": "0.10.2",
         "should": "0.5.1"
     }
