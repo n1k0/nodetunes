@@ -20,6 +20,7 @@ extractFortuneData = (source) ->
     data
 exports.extractFortuneData = extractFortuneData
 
+# Renders a fortune source text to formatted HTML.
 fortunize = (source) ->
     tpl = ->
         dl ->
@@ -34,6 +35,8 @@ fortunize = (source) ->
     ck.render(tpl, lines: extractFortuneData(source))
 exports.fortunize = fortunize
 
+# Generates a slug from a source text. In case no text could be generated, a
+# random string is generated.
 slugify = (text) ->
     text = text.replace /[^\w\s-]/g, ''
     text = text.trim()
@@ -45,6 +48,7 @@ slugify = (text) ->
     text.toLowerCase()
 exports.slugify = slugify
 
+# Formats a human readable distance of time between two dates.
 timeAgoInWords = (to, from) ->
     from ?= new Date
     toTime = if util.isDate to then to.getTime() else to

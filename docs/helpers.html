@@ -15,9 +15,7 @@
             <span class="nv">nick: </span><span class="nx">nick</span>
             <span class="nv">quote: </span><span class="nx">quote</span>
     <span class="nx">data</span>
-<span class="nv">exports.extractFortuneData = </span><span class="nx">extractFortuneData</span>
-
-<span class="nv">fortunize = </span><span class="nf">(source) -&gt;</span>
+<span class="nv">exports.extractFortuneData = </span><span class="nx">extractFortuneData</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Renders a fortune source text to formatted HTML.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">fortunize = </span><span class="nf">(source) -&gt;</span>
     <span class="nv">tpl = </span><span class="o">-&gt;</span>
         <span class="nx">dl</span> <span class="o">-&gt;</span>
             <span class="k">for</span> <span class="nx">line</span><span class="p">,</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">@lines</span>
@@ -29,9 +27,8 @@
                     <span class="nx">dt</span> <span class="k">class</span><span class="o">:</span> <span class="nx">className</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="s2">&quot;&amp;nbsp;&quot;</span>
                     <span class="nx">dd</span> <span class="k">class</span><span class="o">:</span> <span class="nx">className</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="nx">line</span><span class="p">.</span><span class="nx">quote</span>
     <span class="nx">ck</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">tpl</span><span class="p">,</span> <span class="nv">lines: </span><span class="nx">extractFortuneData</span><span class="p">(</span><span class="nx">source</span><span class="p">))</span>
-<span class="nv">exports.fortunize = </span><span class="nx">fortunize</span>
-
-<span class="nv">slugify = </span><span class="nf">(text) -&gt;</span>
+<span class="nv">exports.fortunize = </span><span class="nx">fortunize</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Generates a slug from a source text. In case no text could be generated, a
+random string is generated.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">slugify = </span><span class="nf">(text) -&gt;</span>
     <span class="nv">text = </span><span class="nx">text</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/[^\w\s-]/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
     <span class="nv">text = </span><span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span>
     <span class="nv">text = </span><span class="nx">text</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span>
@@ -40,9 +37,7 @@
         <span class="nv">rchar = </span><span class="o">-&gt;</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span>
         <span class="nx">text</span> <span class="o">+=</span> <span class="nx">rchar</span><span class="p">()</span> <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">8</span><span class="p">]</span>
     <span class="nx">text</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span>
-<span class="nv">exports.slugify = </span><span class="nx">slugify</span>
-
-<span class="nv">timeAgoInWords = </span><span class="nf">(to, from) -&gt;</span>
+<span class="nv">exports.slugify = </span><span class="nx">slugify</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Formats a human readable distance of time between two dates.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">timeAgoInWords = </span><span class="nf">(to, from) -&gt;</span>
     <span class="nx">from</span> <span class="o">?=</span> <span class="k">new</span> <span class="nb">Date</span>
     <span class="nv">toTime = </span><span class="k">if</span> <span class="nx">util</span><span class="p">.</span><span class="nx">isDate</span> <span class="nx">to</span> <span class="k">then</span> <span class="nx">to</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="k">else</span> <span class="nx">to</span>
     <span class="nv">fromTime = </span><span class="k">if</span> <span class="nx">util</span><span class="p">.</span><span class="nx">isDate</span> <span class="nx">from</span> <span class="k">then</span> <span class="nx">from</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="k">else</span> <span class="nx">from</span>
