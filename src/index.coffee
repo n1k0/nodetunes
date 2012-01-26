@@ -56,5 +56,4 @@ app.post "/add",                    routes.add
 app.get  "/fortune/:fortune_slug",  routes.show
 app.get  "*", (req, res) -> res.render '404', status: 404, title: "Not Found"
 
-app.listen 3000
-console.log "Server listening on port #{app.address().port} in #{app.settings.env} mode"
+exports.app = app

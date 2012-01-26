@@ -53,7 +53,7 @@ task 'test', 'Run test suite', ->
     build -> test -> log ":)", green
 
 task 'server', 'Start server', ->
-    build -> require "./lib/index.js"
+    build -> require "./app"
 
 task 'watch', 'Recompile CoffeeScript source files when modified', ->
     build true

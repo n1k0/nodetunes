@@ -1,3 +1,8 @@
 require("coffee-script");
-var app = require("./lib");
-app.listen(3000);
+
+var app = require("./lib")
+  , port = process.env.PORT || process.env.C9_PORT || 3000;
+
+app.listen(port);
+
+console.log("Server listening on port %d in %s mode", ~~port, app.settings.env);

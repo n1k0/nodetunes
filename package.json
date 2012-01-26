@@ -6,10 +6,11 @@
         "express": "2.5.5",
         "coffee-script": "1.2.0",
         "coffeekup": "0.3.1",
-        "connect-mongodb": "1.1.2"
+        "connect-mongodb": "1.1.2",
+        "mongoose": "2.4.10"
     },
     "devDependencies": {
-        "mocha": "0.11.0",
+        "mocha": "0.10.2",
         "should": "0.5.1"
     }
 }
