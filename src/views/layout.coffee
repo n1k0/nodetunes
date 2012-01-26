@@ -22,6 +22,6 @@ html ->
                     a class: "close", href: "#", onclick: "this.parentNode.style.display='none'", -> "×"
                     p message for message in messages[level]
             div id: "content", ->
-                @body
+                safe @body
             footer ->
                 p "© 2012 Nicolas Perriault"

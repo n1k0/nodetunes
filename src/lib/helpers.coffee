@@ -1,4 +1,4 @@
-ck = require "coffeekup"
+ck   = require "coffeekup"
 util = require "util"
 
 extractFortuneData = (source) ->
@@ -25,12 +25,12 @@ fortunize = (source) ->
             for line, i in @lines
                 className = if i % 2 == 0 then "odd" else "even"
                 if line.nick != ""
-                    dt class: className, -> h "<#{line.nick}>"
-                    dd class: className, -> q -> h line.quote
+                    dt class: className, -> "&lt;#{line.nick}&gt;"
+                    dd class: className, -> q -> line.quote
                 else
                     dt class: className, -> "&nbsp;"
-                    dd class: className, -> h line.quote
-    ck.render(tpl, lines: extractFortuneData source)
+                    dd class: className, -> line.quote
+    ck.render(tpl, lines: extractFortuneData(source))
 exports.fortunize = fortunize
 
 slugify = (text) ->

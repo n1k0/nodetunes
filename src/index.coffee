@@ -1,9 +1,10 @@
-coffeekup  = require "coffeekup"
-mongoStore = require "connect-mongodb"
-express    = require "express"
-mongoose   = require "mongoose"
-routes     = require "./routes"
-{NotFound} = require "./lib/errors"
+coffeekup   = require "coffeekup"
+mongoStore  = require "connect-mongodb"
+express     = require "express"
+{normalize} = require "path"
+mongoose    = require "mongoose"
+routes      = require "./routes"
+{NotFound}  = require "./lib/errors"
 
 app = module.exports = express.createServer()
 
@@ -11,7 +12,7 @@ app = module.exports = express.createServer()
 app.configure "development", ->
     @set "db-uri", "mongodb://localhost/nodetunes-dev"
     # Pretty HTML formatting
-    @set "view options", format: true
+    @set "view options", format: true, autoescape: true
     @use express.errorHandler
         dumpExceptions: true
         showStack: true
@@ -26,7 +27,7 @@ app.configure "production", ->
 
 # Standard configuration.
 app.configure ->
-    @set "views", "#{__dirname}/../src/views" # oddity
+    @set "views", normalize "#{__dirname}/../src/views" # oddity
     @set "view engine", "coffee"
     @register '.coffee', coffeekup.adapters.express
     @use express.bodyParser()
