@@ -36,7 +36,10 @@ app.configure ->
     @use express.session(secret: "rocknroll")
     @use @router
     @use express.static "#{__dirname}/public"
-    mongoose.connect @set "db-uri"
+    mongoose.connect @set("db-uri"), (err) =>
+        if err
+            console.error "Unable to connect to MongoDB at #{@set("db-uri")}:\n\t#{err}"
+            process.exit()
 
 app.error (err, req, res, next) ->
     if err instanceof NotFound
@@ -56,5 +59,3 @@ app.get  "/add",                    routes.add
 app.post "/add",                    routes.add
 app.get  "/fortune/:fortune_slug",  routes.show
 app.get  "*", (req, res) -> res.render '404', status: 404, title: "Not Found"
-
-exports.app = app

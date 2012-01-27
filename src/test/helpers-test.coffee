@@ -22,7 +22,13 @@ describe 'extractFortuneData', ->
 
 describe 'fortunize', ->
     fortunize = helpers.fortunize
-    it "should parse a quote", ->
+    it "should parse a simple quote", ->
+        rendered = fortunize "<niko> plop <plop>"
+        rendered.should.equal ck.render ->
+            dl ->
+                dt class: "odd",  -> h "<niko>"
+                dd class: "odd",  -> q -> h "plop <plop>"
+    it "should parse a complex quote", ->
         rendered = fortunize "<niko> plop <plop>\njohn enters the chan <chan>\n<john> plip <plip>"
         rendered.should.equal ck.render ->
             dl ->

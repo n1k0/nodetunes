@@ -5,4 +5,4 @@ var app = require("./lib")
 
 app.listen(port);
 
-console.log("Server listening on port %d in %s mode", ~~port, app.settings.env);
+console.log("Server listening on port %s in %s mode", port, app.settings.env);
