@@ -19,7 +19,7 @@ form action: "/add", method: "post", ->
         div class: "clearfix" + (if @form.errors.content? then " error" else "") , ->
             label for: "content", -> "Content"
             div class: "input", ->
-                textarea class: "xxlarge", name: "fortune[content]", id: "content", placeholder: "<john> Booh", ->
+                textarea class: "xxlarge", name: "fortune[content]", id: "content", placeholder: "&lt;john&gt; Booh", ->
                     @form.values.content
                 # span class: "help-block", ->
                 #     "Paste your quote using the following format"

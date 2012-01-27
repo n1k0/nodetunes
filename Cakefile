@@ -1,9 +1,16 @@
 # adapted from https://github.com/twilson63/cakefile-template, thanks!
 
 fs            = require('fs')
+mongoose      = require('mongoose')
 path          = require('path')
 {print}       = require('util')
 {spawn, exec} = require('child_process')
+{fortunes}    = require('./src/fixtures')
+Fortune       = require('./src/models/Fortune')
+
+# locals
+
+mongoUrl = 'mongodb://localhost/nodetunes-test'
 
 # ANSI Terminal Colors
 
@@ -30,6 +37,7 @@ build = (watch, callback) ->
 
 casper = (callback) ->
     # server
+    process.env.NODE_ENV = "test"
     server = spawn "node", ["app.js"]
     server.stdout.on 'data', (data) -> print data.toString()
     server.stderr.on 'data', (data) -> print data.toString()
@@ -40,6 +48,12 @@ casper = (callback) ->
     casper.on 'exit', (status) ->
         server.kill "SIGHUP"
         callback?() if status is 0
+
+connect = ->
+    mongoose.connect mongoUrl, (err) ->
+        if err
+            log "Unable to connect to MongoDB: #{err}", red
+            process.exit()
 
 findTestFiles = (dir) ->
     files = []
@@ -52,6 +66,24 @@ findTestFiles = (dir) ->
             else if stats.isDirectory() and entry != "views"
                 files = files.concat(findTestFiles(_entry))
     files
+
+load = (callback) ->
+    connect()
+    Fortune.remove ->
+        processed = 0
+        for ref, fortune of fortunes
+            do (ref) ->
+                new Fortune(fortune).save (err, fortune) ->
+                    if err
+                        console.error "Errors encountered"
+                        for error of err.errors
+                            console.error "- #{error}: #{err.errors[error].type}"
+                    else
+                        log "Fixture #{ref} saved: '#{fortune.title}'", green
+                    if ++processed == Object.keys(fortunes).length
+                        log "Processed #{processed} fixtures.", green
+                        if typeof callback is "function"
+                            callback()
 
 log = (message, color, explanation) ->
     console.log color + message + reset + ' ' + (explanation or '')
@@ -79,7 +111,12 @@ task 'docs', 'Generate annotated source code with Docco', ->
     docco.on 'exit', (status) -> callback?() if status is 0
 
 task 'funk', 'Fantastic stuff', ->
-    build -> test -> casper -> log ":)", green
+    build -> load -> test -> casper ->
+        log ":)", green
+        process.exit()
+
+task 'load', 'Load test fixtures', ->
+    load -> process.exit()
 
 task 'test', 'Run test suite', ->
     build -> test -> log ":)", green

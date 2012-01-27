@@ -15,7 +15,7 @@ app.configure "development", ->
     @set "view options", format: true, autoescape: true
     @use express.errorHandler
         dumpExceptions: true
-        showStack: true
+        showStack:      true
 
 # Configuring the *production* environment.
 app.configure "production", ->
@@ -23,6 +23,11 @@ app.configure "production", ->
     @use express.session
         store: mongoStore(@set "db-uri")
         secret: "rocknroll"
+    @use express.errorHandler()
+
+# Configuring the *test* environment.
+app.configure "test", ->
+    @set "db-uri", "mongodb://localhost/nodetunes-test"
     @use express.errorHandler()
 
 # Standard configuration.
