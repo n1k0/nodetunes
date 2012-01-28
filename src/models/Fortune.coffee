@@ -1,5 +1,5 @@
-mongoose  = require "mongoose"
-{slugify} = require "../lib/helpers"
+mongoose       = require "mongoose"
+{slugify}      = require "../lib/helpers"
 
 Fortune = new mongoose.Schema
     title:

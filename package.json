@@ -18,5 +18,8 @@
         "docco": "0.3.0",
         "mocha": "0.10.2",
         "should": "0.5.1"
+    },
+    "scripts": {
+        "test": "./node_modules/coffee-script/bin/cake funk"
     }
 }
