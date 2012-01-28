@@ -20,6 +20,7 @@
         "should": "0.5.1"
     },
     "scripts": {
-        "test": "./node_modules/coffee-script/bin/cake funk"
+        "start": "./node_modules/coffee-script/bin/cake server",
+        "test":  "./node_modules/coffee-script/bin/cake funk"
     }
 }
