@@ -1,4 +1,4 @@
-# adapted from https://github.com/twilson63/cakefile-template, thanks!
+# Adapted from https://github.com/twilson63/cakefile-template, thanks!
 
 fs             = require('fs')
 mongoose       = require('mongoose')
@@ -7,19 +7,28 @@ path           = require('path')
 {spawn, exec}  = require('child_process')
 {fortunes}     = require('./src/fixtures')
 Fortune        = require('./src/models/Fortune')
-
-# locals
-
-mongoUrl = 'mongodb://localhost/nodetunes-test'
+config         = require('./src/config')
+settings       = {}
 
 # ANSI Terminal Colors
 
+statuses =
+    clear:  '☀'
+    cloudy: '☁'
+    info:   '⚑'
+    ko:     '✖'
+    ok:     '✓'
+    rainy:  '☔'
+    stormy: '⚡'
+    warn:   '⚠'
+
 ansi =
-    bold:  '\033[0;1m'
-    blue:  '\033[0;36m'
-    green: '\033[0;32m'
-    reset: '\033[0m'
-    red:   '\033[0;31m'
+    bold:   '\033[0;1m'
+    blue:   '\033[0;36m'
+    green:  '\033[0;32m'
+    orange: '\033[0;33m'
+    reset:  '\033[0m'
+    red:    '\033[0;31m'
 
 # Local methods
 
@@ -30,42 +39,48 @@ build = (watch, callback) ->
     info "building sources…"
     options = ['-c', '-o', 'lib', 'src']
     options.unshift '-w' if watch
-    coffee = spawn 'coffee', options
-    coffee.stdout.on 'data', (data) -> print data.toString()
-    coffee.stderr.on 'data', (data) -> print data.toString()
-    coffee.on 'exit', (status) ->
-        if status is 0
-            ok "sources built ok"
-            if callback? then callback()
+    command './node_modules/.bin/coffee', options, (status) ->
+        if status is 0 then ok "sources built ok"
+        callback?(status)
 
 casper = (callback) ->
     # server
     info "running test server…"
     process.env.NODE_ENV = "test"
-    server = spawn "node", ["app.js"]
-    server.stdout.on 'data', (data) -> print data.toString()
-    server.stderr.on 'data', (data) -> print data.toString()
+    server = command "node", ["app.js"]
     # casper
     info "launching casperjs test suite…"
-    casper = spawn "casperjs", ["test", "casperjs"]
-    casper.stdout.on 'data', (data) -> print data.toString()
-    casper.stderr.on 'data', (data) -> print data.toString()
-    casper.on 'exit', (status) ->
+    command "casperjs", ["test", "casperjs"], (status) ->
         info "terminating test server…"
-        server.kill "SIGHUP", -> ok "server terminated"
+        server.kill "SIGHUP"
         if status is 0
             ok "casper test suite ok"
         else
             ko "casper test suite failed"
-        callback?()
+        callback?(status)
 
-connect = ->
-    mongoose.connect mongoUrl, (err) ->
+command = (program, args, onExit) ->
+    _command = spawn program, args ?= []
+    _command.stdout.on 'data', (data) -> print data.toString()
+    _command.stderr.on 'data', (data) -> print data.toString()
+    if onExit? then _command.on 'exit', onExit
+    _command
+
+connect = (callback) ->
+    info "connecting to MongoDB: #{settings.mongo.uri}"
+    mongoose.connect settings.mongo.uri, (err) ->
         if err
             ko "Unable to connect to MongoDB: #{err}"
-            exit()
+            exit(1)
+        callback?()
 
-exit = -> process.exit()
+exit = (status) ->
+    status = ~~status
+    if status
+        warn "looks like errors occured"
+    else
+        ok "looks like everything went ok"
+    process.exit(status)
 
 findSourceFiles = (dir) ->
     files = []
@@ -79,11 +94,10 @@ findSourceFiles = (dir) ->
                 files = files.concat(findSourceFiles(_entry))
     files
 
-info = (message) -> log "⚑", ansi.blue, message
+info = (message) -> log statuses.info, ansi.blue, message
 
 load = (callback) ->
-    connect()
-    Fortune.remove ->
+    connect -> Fortune.remove ->
         processed = 0
         info "loading fixtures…"
         for ref, fortune of fortunes
@@ -95,53 +109,65 @@ load = (callback) ->
                             ko "- #{error}: #{err.errors[error].type}"
                     if ++processed == Object.keys(fortunes).length
                         ok "processed #{processed} fixtures."
-                        callback?()
+                        callback?(err, fortune)
 
 log = (message, color, explanation) ->
-    color = ansi[color] || color
-    console.log (color || '') + message + ansi.reset + ' ' + (explanation or '')
+    color = ansi[color] || color || ''
+    explanation ?= ''
+    print "#{color}#{message}#{ansi.reset} #{explanation}\n"
 
-ko = (message) -> log "×", ansi.red, message
+ko = (message) -> log statuses.ko, ansi.red, message
 
-ok = (message) -> log "✓", ansi.green, message
+ok = (message) -> log statuses.ok, ansi.green, message
 
 server = -> require "./app"
 
+setup = (env, callback) ->
+    if typeof env is 'function'
+        callback = env
+    else if typeof env is 'string'
+        process.env.NODE_ENV = env
+    process.env.NODE_ENV ?= "development"
+    if process.env.NODE_ENV not of config
+        ko "Unsupported environment name: #{process.env.NODE_ENV}"
+    else
+        info "Using '#{process.env.NODE_ENV}' environment"
+    settings = config[process.env.NODE_ENV]
+    callback?()
+
 test = (callback) ->
     info "launching unit test suite…"
-    command = "node_modules/.bin/_mocha --require should lib/test/*.js"
-    mocha = exec command, (err, stdout, stderr) ->
-        if err then ko err
-    mocha.stdout.on 'data', (data) -> print data.toString()
-    mocha.stderr.on 'data', (data) -> print data.toString()
-    mocha.on 'exit', (status) ->
-        if status is 0
-            ok "unit test suite ok"
-        else
-            ko "unit test suite failed"
-        callback?()
+    options = ['--require', 'should']
+    options = options.concat(findSourceFiles("src/test"))
+    command "./node_modules/.bin/mocha", options, (status) ->
+        if status is 0 then ok "unit test suite ok" else ko "unit test suite failed"
+        callback?(status)
+
+warn = (message) -> log statuses.warn, ansi.orange, message
 
 # Task definitions
 
-task 'build', 'Build current project', -> build()
+task 'build', 'Build current project', ->
+    setup -> build (status) -> exit(1 if status)
+
+task 'casper', 'Launches casperjs test suite', ->
+    setup 'test', -> build -> load -> casper (status) -> exit(1 if status)
 
 task 'docs', 'Generate annotated source code with Docco', ->
-    files = findSourceFiles("src")
-    docco = spawn 'node_modules/.bin/docco', files
-    docco.stdout.on 'data', (data) -> print data.toString()
-    docco.stderr.on 'data', (data) -> print data.toString()
-    docco.on 'exit', (status) -> callback?() if status is 0
+    files = findSourceFiles "src"
+    setup -> command './node_modules/.bin/docco', files, (status) -> exit(1 if err)
 
 task 'funk', 'Fantastic stuff', ->
-    build -> load -> test -> casper -> exit()
+    setup 'test', -> build -> load -> test -> casper (status) -> exit(1 if status)
 
-task 'load', 'Load test fixtures', -> load -> exit()
+task 'load', 'Load test fixtures', ->
+    setup -> load (err) -> exit(1 if err)
 
 task 'test', 'Run test suite', ->
-    build -> test -> exit()
+    setup 'test', -> build -> test (status) -> exit(1 if status)
 
 task 'server', 'Start server', ->
-    build -> server()
+    setup -> build -> server()
 
 task 'watch', 'Recompile CoffeeScript source files when modified', ->
-    build true, -> exit()
+    setup -> build true, (status) -> exit(1 if status)
