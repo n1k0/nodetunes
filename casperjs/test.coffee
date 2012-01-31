@@ -32,5 +32,14 @@ casper.then ->
     t.assertEvalEquals ->
         __utils__.findOne('article h2').innerText
     , "New one", "Fortune has been added"
+    @click 'article h2 a'
+
+casper.then ->
+    t.assertHttpStatus 200
+    t.assertTitle "New one | NodeTunes", "Fortune page has expected title"
+    t.assertEvalEquals ->
+        __utils__.findOne('article blockquote').innerText
+    , "<john>\nPlop\n<bob>\nPlip\n"
+    , "Fortune blockquote has expected contents"
 
 casper.run -> t.done()
