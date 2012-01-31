@@ -22,7 +22,6 @@ class Form
                 for field of err.errors
                     @errors[field] = err.errors[field].type
                 @valid = false
-            if typeof callback == "function"
-                callback err, instance
+            callback?(err, instance)
 
 exports.Form = Form
