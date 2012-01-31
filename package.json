@@ -6,21 +6,29 @@
         "type": "git",
         "url": "https://github.com/n1k0/nodetunes.git"
     },
+    "author": "Nicolas Perriault <np@akei.com>",
     "dependencies": {
-        "express": "2.5.5",
-        "coffee-script": "1.2.0",
-        "coffeekup": "git://github.com/n1k0/coffeekup.git",
-        "connect-mongodb": "1.1.2",
-        "validator": "0.3.9",
-        "mongoose": "2.5.0"
+        "express":               "2.5.5",
+        "coffee-script":         "1.2.0",
+        "coffeekup":             "git://github.com/n1k0/coffeekup.git",
+        "express-session-mongo": "git://github.com/russjp1985/express-session-mongo.git",
+        "validator":             "0.3.9",
+        "mongoose":              "2.5.0"
     },
     "devDependencies": {
-        "docco": "0.3.0",
-        "mocha": "0.10.2",
-        "should": "0.5.1"
+        "docco":  "0.3.0",
+        "mocha":  "0.10.2",
+        "should": "0.5.1",
+        "up":     "0.1.0"
     },
     "scripts": {
         "start": "./node_modules/coffee-script/bin/cake server",
         "test":  "./node_modules/coffee-script/bin/cake funk"
-    }
+    },
+    "licenses":[
+        {   
+            "type" : "MIT",
+            "url" : "http://github.com/n1k0/nodetunes/blob/master/LICENSE"
+        }   
+    ]
 }
