@@ -10,8 +10,6 @@ Fortune        = require('./src/models/Fortune')
 config         = require('./src/config')
 settings       = {}
 
-# ANSI Terminal Colors
-
 statuses =
     clear:  '☀'
     cloudy: '☁'
@@ -29,8 +27,6 @@ ansi =
     orange: '\033[0;33m'
     reset:  '\033[0m'
     red:    '\033[0;31m'
-
-# Local methods
 
 build = (watch, callback) ->
     if typeof watch is 'function'
@@ -72,7 +68,7 @@ connect = (callback) ->
         if err
             ko "Unable to connect to MongoDB: #{err}"
             exit(1)
-        callback?()
+        process.nextTick -> callback?()
 
 exit = (status) ->
     status = ~~status

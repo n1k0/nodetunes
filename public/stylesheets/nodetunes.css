@@ -1,8 +1,189 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    width: 960px;
+    margin: 0 auto;
+    font-family: 'Andika Basic Regular', Palatino, "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", sans-serif;
 }
-
 a {
-  color: #00B7FF;
+    color: #000;
+}
+q {
+    quotes: none;
+}
+    q:before, q:after { /* for webkit */
+        content: "";
+        content: none;
+    }
+h1, h2, h3, h4, h5, h6 {
+    font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+}
+h1 {
+    text-align: center;
+    padding: 0;
+    margin: 16px 0 0;
+}
+    h1 a {
+        text-decoration: none;
+        font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+        font-size: 70px;
+        font-weight: normal;
+        line-height: 1.5;
+        word-spacing: 0.1em;
+    }
+    h2 {
+        font: 27px/34px 'Andika Basic Regular', Palatino, "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", sans-serif;
+    }
+        h2 a {
+            text-decoration: none;
+        }
+header {
+    display: block;
+    background: #fff url("../images/inkblot.png") no-repeat 180px 10px;
+}
+    header p small {
+        display: block;
+        text-align: center;
+        margin-top: -40px;
+    }
+nav#menu {
+    padding-bottom: 12px;
+}
+    nav#menu ul {
+        display: inline-block;
+        list-style-type: none;
+        margin: 15px 0 5px 0;
+        padding: 0;
+        border-top: 2px solid #000;
+        border-bottom: 2px solid #000;
+    }
+        nav#menu li {
+            float: left;
+            width: 230px;
+            text-align: center;
+        }
+        nav#menu li.active {
+            background-color: #000;
+            color: #fff;
+        }
+            nav#menu li:hover {
+                background-color: #000;
+                color: #fff;
+            }
+            nav#menu li.active:hover {
+                background-color: #000;
+                color: #000;
+            }
+        nav#menu li a {
+            display: block;
+            padding-top: 16px;
+            font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+            text-decoration: none;
+            font-weight: normal;
+            font-size: 120%;
+        }
+        nav#menu li.active a {
+            color: #fff;
+        }
+            nav#menu li a:hover {
+                color: #fff;
+            }
+        nav#menu li small {
+            display: block;
+            font-size: 70%;
+            padding-bottom: 16px;
+        }
+nav.pagination ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0 0;
+    text-align: center;
+}
+    nav.pagination li {
+        display: inline;
+    }
+        nav.pagination li:after {
+            content: " · ";
+        }
+div.holder {
+    background: transparent url("../images/inkblot2.png") repeat-y;
+    margin-bottom: 16px;
+}
+section#main {
+    clear: both;
+    display: block;
+    padding-top: 1px;
+    display: block;
+    float: left;
+    width: 650px;
+    min-height: 500px;
+    margin-bottom: 10px;
+}
+    article.fortune h2 {
+        margin: 0;
+        padding: 0;
+        clear: left;
+    }
+    article.fortune blockquote {
+        background: #000;
+        color: #fff;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        border-radius: 8px;
+        margin-right: 10px;
+        margin-left: 30px;
+    }
+    article.fortune blockquote dl {
+        font-family: 'Andika Basic Regular', Palatino, "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", sans-serif;
+        line-height: 1.6em;
+        margin: 24px;
+    }
+    article.fortune blockquote dt {
+        clear: left;
+        display: block;
+        width: 120px;
+        float: left;
+        text-align: right;
+        padding: 3px 0 3px 0;
+    }
+        article.fortune blockquote dt.even {
+        }
+    article.fortune blockquote dd {
+        display: block;
+        width: 354px;
+        float: left;
+        margin-left: 10px;
+        padding: 3px 0 3px 8px;
+        border-left: 1px solid #ccc;
+    }
+    article.fortune aside.fortune-infos p {
+        clear: left;
+        padding: 10px 0 16px 0;
+        margin: 0 10px 16px 30px;
+        border-bottom: 1px solid #000;
+    }
+    .comments-block {
+        margin-left: 30px;
+    }
+    .comment-form-block {
+        margin-left: 30px;
+    }
+    .fortune-context-actions p {
+        margin-left: 30px;
+    }
+section#misc .content {
+    float: left;
+    width: 184px;
+    padding-left: 80px;
+    margin-top: -12px;
+}
+    section#misc .content h2 {
+        font-size: 22px;
+    }
+footer p {
+    clear: both;
+    text-align: center;
+    margin-top: 16px;
+    padding: 15px 0 0;
+    border-top: 2px solid #000;
+    background: #fff;
 }

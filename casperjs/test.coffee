@@ -5,13 +5,12 @@ casper.on 'location.changed', (url) -> t.comment url
 casper.start 'http://localhost:3000', ->
     t.assertHttpStatus 200
     t.assertTitle "Home | NodeTunes", "Homepage has expected title"
-    t.assertExists "#content", "Main content div is found"
     t.assertEvalEquals ->
         __utils__.findAll('article').length
     , 2, "Homepage lists expected number of fortunes"
     t.comment "create new fortune"
 
-casper.thenClick 'li a[href="/add"]', ->
+casper.thenClick 'li a[href="/new"]', ->
     t.assertHttpStatus 200
     t.assertTitle "Add a fortune | NodeTunes", "Add fortune page has expected title"
     @fill 'form',
@@ -39,7 +38,7 @@ casper.then ->
     t.assertTitle "New one | NodeTunes", "Fortune page has expected title"
     t.assertEvalEquals ->
         __utils__.findOne('article blockquote').innerText
-    , "<john>\nPlop\n<bob>\nPlip\n"
+    , "<john>Plop<bob>Plip\n\n"
     , "Fortune blockquote has expected contents"
 
 casper.run -> t.done()

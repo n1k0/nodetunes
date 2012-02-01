@@ -11,18 +11,20 @@ connect = (uri, callback, onerror) ->
     mongoose.connect uri, (err) ->
         if err
             console.error "Unable to connect to MongoDB at #{@uri}:\n\t#{err}"
-            onerror?(err)
-        callback?()
+            process.nextTick -> onerror?(err)
+        process.nextTick -> callback?()
 
 app = module.exports = express.createServer()
+
+projectRoot = "#{__dirname}/../"
 
 # Standard configuration.
 app.configure ->
     @use express.errorHandler()
-    @set "views", normalize "#{__dirname}/../src/views" # oddity
+    @set "views", normalize "#{projectRoot}/src/views" # oddity
     @set "view engine", "coffee"
     @register '.coffee', coffeekup.adapters.express
-    @use express.static("#{__dirname}/public")
+    @use express.static("#{projectRoot}/public")
 
 # Configuring the *development* environment.
 app.configure "development", ->
@@ -71,9 +73,10 @@ app.dynamicHelpers
     helpers:        (req, res) -> require "./lib/helpers"
     get_messages:   (req, res) -> req.flash()
     session:        (req, res) -> req.session
+    url:            (req, res) -> req.url
 
 app.get  "/",                       routes.index
-app.get  "/add",                    routes.add
-app.post "/add",                    routes.add
+app.get  "/new",                    routes.add
+app.post "/new",                    routes.add
 app.get  "/fortune/:fortune_slug",  routes.show
 app.get  "*", (req, res) -> res.render '404', status: 404, title: "Not Found"

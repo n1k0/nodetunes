@@ -1,4 +1,4 @@
-form action: "/add", method: "post", ->
+form action: "/new", method: "post", ->
     if @form.valid is false
         div class: "alert-message block-message error", ->
             p "Errors have been encountered; please fix the field values highlighted in red."
