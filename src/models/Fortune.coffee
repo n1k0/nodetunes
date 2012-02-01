@@ -29,16 +29,30 @@ Fortune = new mongoose.Schema
             (v) -> v.length >= 10 and v.length <= 5000,
             "Contents length must be comprised between 10 and 5000 chars"
         ]
-    date:
-        type: Date
-        default: Date.now
-        index: true
+    votes: type: Number, default: 0, index: true
+    date: type: Date, default: Date.now, index: true
 
 Fortune.pre 'validate', (next) ->
     @slug = slugify @title
     next()
 
+Fortune.methods.voteDown = ->
+    @votes--
+
+Fortune.methods.voteUp = ->
+    @votes++
+
 Fortune.statics.findOneBySlug = (slug, callback) ->
     @findOne slug: slug, callback
+
+Fortune.statics.findWorst = (options, callback) ->
+    query = @find({}).sort('votes', 1)
+    query.limit(options.limit) if options.limit
+    query.execFind (err, fortunes) -> callback?(err, fortunes)
+
+Fortune.statics.findTop = (options, callback) ->
+    query = @find({}).sort('votes', -1)
+    query.limit(options.limit) if options.limit
+    query.execFind (err, fortunes) -> callback?(err, fortunes)
 
 module.exports = mongoose.model 'Fortune', Fortune

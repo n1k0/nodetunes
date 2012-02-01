@@ -2,13 +2,6 @@ Fortune    = require "../models/Fortune"
 {Form}     = require "../lib/form"
 {NotFound} = require "../lib/errors"
 
-exports.index = (req, res, next) ->
-    Fortune.find({}).sort("date", -1).execFind (err, fortunes) ->
-        if err then return next err
-        res.render "index",
-            title: "Home",
-            fortunes: fortunes
-
 exports.add = (req, res) ->
     form = new Form Fortune
     stdRes = (form) ->
@@ -24,6 +17,20 @@ exports.add = (req, res) ->
             req.flash "info", "Fortune added"
             res.redirect "/"
 
+exports.index = (req, res, next) ->
+    Fortune.find({}).sort("date", -1).limit(10).execFind (err, fortunes) ->
+        if err then return next err
+        res.render "index",
+            title: "Home",
+            fortunes: fortunes
+
+exports.top = (req, res, next) ->
+    Fortune.findTop limit: 10, (err, fortunes) ->
+        if err then return next err
+        res.render "index",
+            title: "Top 10",
+            fortunes: fortunes
+
 exports.show = (req, res, next) ->
     slug = req.param "fortune_slug"
     Fortune.findOneBySlug slug, (err, fortune) ->
@@ -33,3 +40,10 @@ exports.show = (req, res, next) ->
         res.render "show",
             fortune: fortune
             title: fortune.title
+
+exports.worst = (req, res, next) ->
+    Fortune.findWorst limit: 10, (err, fortunes) ->
+        if err then return next err
+        res.render "index",
+            title: "Flop 10",
+            fortunes: fortunes

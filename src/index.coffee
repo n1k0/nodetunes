@@ -76,7 +76,9 @@ app.dynamicHelpers
     url:            (req, res) -> req.url
 
 app.get  "/",                       routes.index
+app.get  "/worst",                  routes.worst
 app.get  "/new",                    routes.add
 app.post "/new",                    routes.add
 app.get  "/fortune/:fortune_slug",  routes.show
+app.get  "/top",                    routes.top
 app.get  "*", (req, res) -> res.render '404', status: 404, title: "Not Found"
