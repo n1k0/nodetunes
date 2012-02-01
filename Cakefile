@@ -80,7 +80,7 @@ exit = (status) ->
 info = (message) -> log statuses.info, ansi.blue, message
 
 load = (callback) ->
-    connect -> Fortune.remove ->
+    Fortune.remove ->
         processed = 0
         info "loading fixtures…"
         for ref, fortune of fortunes
@@ -120,8 +120,10 @@ setup = (env, callback) ->
 
 test = (callback) ->
     info "launching unit test suite…"
-    options = ['--require', 'should']
-    options = options.concat(utils.findFiles("src/test", matchFiles: /\.coffee$/, excludeDirs: ["casperjs"]))
+    testFiles = utils.findFiles "src/test",
+        matchFiles: /\.coffee$/
+        excludeDirs: ["casperjs"]
+    options = testFiles.concat ['--require', 'should']
     command "./node_modules/.bin/mocha", options, (status) ->
         if status is 0 then ok "unit test suite ok" else ko "unit test suite failed"
         callback?(status)
@@ -137,17 +139,19 @@ task 'casper', 'Launches casperjs test suite', ->
     setup 'test', -> build -> load -> casper (status) -> exit(1 if status)
 
 task 'docs', 'Generate annotated source code with Docco', ->
-    files = utils.findFiles("src", matchFiles: /\.coffee$/, excludeDirs: "views")
+    files = utils.findFiles "src",
+        matchFiles: /\.coffee$/
+        excludeDirs: "views"
     setup -> command './node_modules/.bin/docco', files, (status) -> exit(1 if status)
 
 task 'funk', 'Fantastic stuff', ->
-    setup 'test', -> build -> load -> test -> casper (status) -> exit(1 if status)
+    setup 'test', -> build -> connect -> load -> test -> load -> casper (status) -> exit(1 if status)
 
 task 'load', 'Load test fixtures', ->
     setup -> load (err) -> exit(1 if err)
 
 task 'test', 'Run test suite', ->
-    setup 'test', -> build -> test (status) -> exit(1 if status)
+    setup 'test', -> build -> connect -> load -> test (status) -> exit(1 if status)
 
 task 'server', 'Start server', ->
     setup -> build -> server()
