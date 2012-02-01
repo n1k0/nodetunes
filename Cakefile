@@ -1,13 +1,12 @@
 # Adapted from https://github.com/twilson63/cakefile-template, thanks!
 
-fs             = require('fs')
 mongoose       = require('mongoose')
-path           = require('path')
 {print}        = require('util')
 {spawn, exec}  = require('child_process')
 {fortunes}     = require('./src/fixtures')
 Fortune        = require('./src/models/Fortune')
 config         = require('./src/config')
+utils          = require('./src/lib/utils')
 settings       = {}
 
 statuses =
@@ -46,7 +45,7 @@ casper = (callback) ->
     server = command "node", ["app.js"]
     # casper
     info "launching casperjs test suite…"
-    command "casperjs", ["test", "casperjs"], (status) ->
+    command "casperjs", ["test", "#{__dirname}/src/test/casperjs"], (status) ->
         info "terminating test server…"
         server.kill "SIGHUP"
         if status is 0
@@ -77,18 +76,6 @@ exit = (status) ->
     else
         ok "looks like everything went ok"
     process.exit(status)
-
-findSourceFiles = (dir) ->
-    files = []
-    for entry in fs.readdirSync(dir)
-        if entry != "." and entry != ".."
-            _entry = path.resolve "#{dir}/#{entry}"
-            stats = fs.statSync _entry
-            if stats.isFile(entry) and /\.coffee$/.test(_entry)
-                files.push(_entry)
-            else if stats.isDirectory() and entry != "views"
-                files = files.concat(findSourceFiles(_entry))
-    files
 
 info = (message) -> log statuses.info, ansi.blue, message
 
@@ -134,7 +121,7 @@ setup = (env, callback) ->
 test = (callback) ->
     info "launching unit test suite…"
     options = ['--require', 'should']
-    options = options.concat(findSourceFiles("src/test"))
+    options = options.concat(utils.findFiles("src/test", matchFiles: /\.coffee$/, excludeDirs: ["casperjs"]))
     command "./node_modules/.bin/mocha", options, (status) ->
         if status is 0 then ok "unit test suite ok" else ko "unit test suite failed"
         callback?(status)
@@ -150,8 +137,8 @@ task 'casper', 'Launches casperjs test suite', ->
     setup 'test', -> build -> load -> casper (status) -> exit(1 if status)
 
 task 'docs', 'Generate annotated source code with Docco', ->
-    files = findSourceFiles "src"
-    setup -> command './node_modules/.bin/docco', files, (status) -> exit(1 if err)
+    files = utils.findFiles("src", matchFiles: /\.coffee$/, excludeDirs: "views")
+    setup -> command './node_modules/.bin/docco', files, (status) -> exit(1 if status)
 
 task 'funk', 'Fantastic stuff', ->
     setup 'test', -> build -> load -> test -> casper (status) -> exit(1 if status)

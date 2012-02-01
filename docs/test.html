@@ -1,0 +1,46 @@
+<!DOCTYPE html>  <html> <head>   <title>test.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="config.html">                 config.coffee               </a>                                           <a class="source" href="index.html">                 index.coffee               </a>                                           <a class="source" href="index.html">                 index.coffee               </a>                                           <a class="source" href="errors.html">                 errors.coffee               </a>                                           <a class="source" href="form.html">                 form.coffee               </a>                                           <a class="source" href="helpers.html">                 helpers.coffee               </a>                                           <a class="source" href="Fortune.html">                 Fortune.coffee               </a>                                           <a class="source" href="index.html">                 index.coffee               </a>                                           <a class="source" href="test.html">                 test.coffee               </a>                                           <a class="source" href="helpers-test.html">                 helpers-test.coffee               </a>                                           <a class="source" href="model.html">                 model.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               test.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nv">t = </span><span class="nx">casper</span><span class="p">.</span><span class="nx">test</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="kc">on</span> <span class="s1">&#39;location.changed&#39;</span><span class="p">,</span> <span class="nf">(url) -&gt;</span> <span class="nx">t</span><span class="p">.</span><span class="nx">comment</span> <span class="nx">url</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="nx">start</span> <span class="s1">&#39;http://localhost:3000&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertHttpStatus</span> <span class="mi">200</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertTitle</span> <span class="s2">&quot;Home | NodeTunes&quot;</span><span class="p">,</span> <span class="s2">&quot;Homepage has expected title&quot;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertEvalEquals</span> <span class="o">-&gt;</span>
+        <span class="nx">__utils__</span><span class="p">.</span><span class="nx">findAll</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">).</span><span class="nx">length</span>
+    <span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Homepage lists expected number of fortunes&quot;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">comment</span> <span class="s2">&quot;create new fortune&quot;</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="nx">thenClick</span> <span class="s1">&#39;li a[href=&quot;/new&quot;]&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertHttpStatus</span> <span class="mi">200</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertTitle</span> <span class="s2">&quot;Add a fortune | NodeTunes&quot;</span><span class="p">,</span> <span class="s2">&quot;Add fortune page has expected title&quot;</span>
+    <span class="nx">@fill</span> <span class="s1">&#39;form&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;fortune[title]&#39;</span><span class="o">:</span>   <span class="s2">&quot;New one&quot;</span>
+        <span class="s1">&#39;fortune[content]&#39;</span><span class="o">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                            &lt;john&gt; Plop</span>
+<span class="s2">                            &lt;bob&gt; Plip</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+    <span class="p">,</span> <span class="kc">true</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">comment</span> <span class="s2">&quot;submitting new fortune&quot;</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="k">then</span> <span class="o">-&gt;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertHttpStatus</span> <span class="mi">200</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertTitle</span> <span class="s2">&quot;Home | NodeTunes&quot;</span><span class="p">,</span> <span class="s2">&quot;Homepage has expected title&quot;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertEvalEquals</span> <span class="o">-&gt;</span>
+        <span class="nx">__utils__</span><span class="p">.</span><span class="nx">findAll</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">).</span><span class="nx">length</span>
+    <span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Homepage lists new expected number of fortunes&quot;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertEvalEquals</span> <span class="o">-&gt;</span>
+        <span class="nx">__utils__</span><span class="p">.</span><span class="nx">findOne</span><span class="p">(</span><span class="s1">&#39;article h2&#39;</span><span class="p">).</span><span class="nx">innerText</span>
+    <span class="p">,</span> <span class="s2">&quot;New one&quot;</span><span class="p">,</span> <span class="s2">&quot;Fortune has been added&quot;</span>
+    <span class="nx">@click</span> <span class="s1">&#39;article h2 a&#39;</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="k">then</span> <span class="o">-&gt;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertHttpStatus</span> <span class="mi">200</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertTitle</span> <span class="s2">&quot;New one | NodeTunes&quot;</span><span class="p">,</span> <span class="s2">&quot;Fortune page has expected title&quot;</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">assertEvalEquals</span> <span class="o">-&gt;</span>
+        <span class="nx">__utils__</span><span class="p">.</span><span class="nx">findOne</span><span class="p">(</span><span class="s1">&#39;article blockquote&#39;</span><span class="p">).</span><span class="nx">innerText</span>
+    <span class="p">,</span> <span class="s2">&quot;&lt;john&gt;Plop&lt;bob&gt;Plip\n\n&quot;</span>
+    <span class="p">,</span> <span class="s2">&quot;Fortune blockquote has expected contents&quot;</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="nx">run</span> <span class="o">-&gt;</span> <span class="nx">t</span><span class="p">.</span><span class="nx">done</span><span class="p">()</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
