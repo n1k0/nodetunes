@@ -38,3 +38,7 @@ To get a lit of all available commands:
     cake test                 # Run test suite
     cake server               # Start server
     cake watch                # Recompile CoffeeScript source files when modified
+
+So to run the server in development:
+
+    $ cake server
