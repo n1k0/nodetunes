@@ -36,11 +36,13 @@ Fortune.pre 'validate', (next) ->
     @slug = slugify @title
     next()
 
-Fortune.methods.voteDown = ->
+Fortune.methods.voteDown = (callback) ->
     @votes--
+    @save -> callback?(arguments...)
 
-Fortune.methods.voteUp = ->
+Fortune.methods.voteUp = (callback) ->
     @votes++
+    @save -> callback?(arguments...)
 
 Fortune.statics.findOneBySlug = (slug, callback) ->
     @findOne slug: slug, callback

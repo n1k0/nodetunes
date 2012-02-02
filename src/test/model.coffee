@@ -38,3 +38,27 @@ describe 'Fortune', ->
             fortunes.should.have.length 1
             fortunes[0].votes.valueOf().should.equal 10
             done()
+
+    it "should find a Fortune", (done) ->
+        Fortune.findOneBySlug "first-fortune", (err, fortune) ->
+            done(err) if err
+            fortune.title.should.equal "First fortune"
+            done()
+
+    it "should vote up a Fortune", (done) ->
+        Fortune.findOneBySlug "first-fortune", (err, fortune) ->
+            done(err) if err
+            fortune.votes.valueOf().should.equal 10
+            fortune.voteUp (err, fortune) ->
+                done(err) if err
+                fortune.votes.valueOf().should.equal 11
+                done()
+
+    it "should vote down a Fortune", (done) ->
+        Fortune.findOneBySlug "first-fortune", (err, fortune) ->
+            done(err) if err
+            fortune.votes.valueOf().should.equal 11
+            fortune.voteDown (err, fortune) ->
+                done(err) if err
+                fortune.votes.valueOf().should.equal 10
+                done()

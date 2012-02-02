@@ -5,14 +5,12 @@ article class: "fortune", id: "fortune_#{@fortune.id}", ->
         br style: "clear:both"
     aside class: "fortune-infos", ->
         p ->
-            safe "Posted by #{yield -> strong -> h @fortune.author} #{@helpers.timeAgoInWords @fortune.date} ago."
+            text "Posted by"
+            strong -> @fortune.author
+            text @helpers.timeAgoInWords(@fortune.date) + " ago •"
             span class: "fortune-actions", ->
                 strong -> "#{@fortune.votes} votes"
-                # <?php echo link_to('-', 'fortune_down', $fortune, array(
-                #     'method' => 'put',
-                #     'title'    => 'Vote down this fortune',
-                # )) ?> /
-                # <?php echo link_to('+', 'fortune_up', $fortune, array(
-                #     'method' => 'put',
-                #     'title'    => 'Vote up this fortune',
-                # )) ?>
+                text "•"
+                a href: "/fortune/#{@fortune.slug}/down", title: "Vote down this fortune", "-"
+                text "/"
+                a href: "/fortune/#{@fortune.slug}/up", title: "Vote up this fortune", "+"

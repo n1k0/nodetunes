@@ -17,6 +17,12 @@ exports.add = (req, res) ->
             req.flash "info", "Fortune added"
             res.redirect "/"
 
+exports.down = (req, res, next) ->
+    req.fortune.voteDown (err) ->
+        if err then return next err
+        req.flash "info", "Fortune voted down"
+        res.redirect "/fortune/#{req.fortune.slug}"
+
 exports.index = (req, res, next) ->
     Fortune.find({}).sort("date", -1).limit(10).execFind (err, fortunes) ->
         if err then return next err
@@ -32,14 +38,15 @@ exports.top = (req, res, next) ->
             fortunes: fortunes
 
 exports.show = (req, res, next) ->
-    slug = req.param "fortune_slug"
-    Fortune.findOneBySlug slug, (err, fortune) ->
+    res.render "show",
+        fortune: req.fortune
+        title: req.fortune.title
+
+exports.up = (req, res, next) ->
+    req.fortune.voteUp (err) ->
         if err then return next err
-        if not fortune
-            return next new NotFound "Fortune with slug=#{slug} not found"
-        res.render "show",
-            fortune: fortune
-            title: fortune.title
+        req.flash "info", "Fortune voted up"
+        res.redirect "/fortune/#{req.fortune.slug}"
 
 exports.worst = (req, res, next) ->
     Fortune.findWorst limit: 10, (err, fortunes) ->

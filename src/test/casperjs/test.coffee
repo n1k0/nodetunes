@@ -41,4 +41,23 @@ casper.then ->
     , "<john>Plop<bob>Plip\n\n"
     , "Fortune blockquote has expected contents"
 
+casper.then ->
+    t.comment "Voting up"
+    t.assertEvalEquals ->
+        __utils__.findOne('.fortune-actions strong').innerText.trim()
+    , "0 votes", "Expected initial number of votes"
+    @click '.fortune-actions a[title="Vote up this fortune"]'
+
+casper.then ->
+    t.assertEvalEquals ->
+        __utils__.findOne('.fortune-actions strong').innerText.trim()
+    , "1 votes", "Expected new number of votes"
+    t.comment "Voting down"
+    @click '.fortune-actions a[title="Vote down this fortune"]'
+
+casper.then ->
+    t.assertEvalEquals ->
+        __utils__.findOne('.fortune-actions strong').innerText.trim()
+    , "0 votes", "Expected new number of votes"
+
 casper.run -> t.done()

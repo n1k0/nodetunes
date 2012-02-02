@@ -8,12 +8,12 @@
     },
     "author": "Nicolas Perriault <np@akei.com>",
     "dependencies": {
-        "express":               "2.5.5",
-        "coffee-script":         "1.2.0",
-        "coffeekup":             "git://github.com/n1k0/coffeekup.git",
-        "express-session-mongo": "git://github.com/russjp1985/express-session-mongo.git",
-        "validator":             "0.3.9",
-        "mongoose":              "2.5.0"
+        "express":                      "2.5.5",
+        "coffee-script":                "latest",
+        "coffeekup":                    "git://github.com/n1k0/coffeekup.git",
+        "express-session-mongo-russp":  "latest",
+        "validator":                    "0.3.9",
+        "mongoose":                     "2.5.0"
     },
     "devDependencies": {
         "docco":  "0.3.0",
@@ -26,9 +26,9 @@
         "test":  "./node_modules/coffee-script/bin/cake funk"
     },
     "licenses":[
-        {   
+        {
             "type" : "MIT",
             "url" : "http://github.com/n1k0/nodetunes/blob/master/LICENSE"
-        }   
+        }
     ]
 }

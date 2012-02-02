@@ -4,6 +4,7 @@ express     = require("express")
 mongoose    = require("mongoose")
 MongoStore  = require("express-session-mongo-russp")
 config      = require("./config")
+Fortune     = require("./models/Fortune")
 routes      = require("./routes")
 {NotFound}  = require("./lib/errors")
 
@@ -75,10 +76,22 @@ app.dynamicHelpers
     session:        (req, res) -> req.session
     url:            (req, res) -> req.url
 
-app.get  "/",                       routes.index
-app.get  "/worst",                  routes.worst
-app.get  "/new",                    routes.add
-app.post "/new",                    routes.add
-app.get  "/fortune/:fortune_slug",  routes.show
-app.get  "/top",                    routes.top
+# Route parameter preconditions
+app.param 'fortuneSlug', (req, res, next, slug) ->
+    Fortune.findOneBySlug slug, (err, fortune) ->
+        if err then return next err
+        if not fortune
+            return next new NotFound "Fortune with slug=#{slug} not found"
+        req.fortune = fortune;
+        next()
+
+# Route definitions
+app.get  "/",                          routes.index
+app.get  "/worst",                     routes.worst
+app.get  "/new",                       routes.add
+app.post "/new",                       routes.add
+app.get  "/fortune/:fortuneSlug",      routes.show
+app.get  "/top",                       routes.top
+app.get  "/fortune/:fortuneSlug/down", routes.down
+app.get  "/fortune/:fortuneSlug/up",   routes.up
 app.get  "*", (req, res) -> res.render '404', status: 404, title: "Not Found"
