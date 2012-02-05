@@ -24,7 +24,7 @@ exports.down = (req, res, next) ->
         res.redirect "/fortune/#{req.fortune.slug}"
 
 exports.index = (req, res, next) ->
-    Fortune.find({}).sort("date", -1).limit(10).execFind (err, fortunes) ->
+    Fortune.findLatest limit: 10, (err, fortunes) ->
         if err then return next err
         res.render "index",
             title: "Home",

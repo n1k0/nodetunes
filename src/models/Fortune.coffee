@@ -44,16 +44,21 @@ Fortune.methods.voteUp = (callback) ->
     @votes++
     @save -> callback?(arguments...)
 
-Fortune.statics.findOneBySlug = (slug, callback) ->
-    @findOne slug: slug, callback
-
-Fortune.statics.findWorst = (options, callback) ->
-    query = @find({}).sort('votes', 1)
+Fortune.statics.findLatest = (options, callback) ->
+    query = @find().desc("date")
     query.limit(options.limit) if options.limit
     query.execFind (err, fortunes) -> callback?(err, fortunes)
 
+Fortune.statics.findOneBySlug = (slug, callback) ->
+    @findOne slug: slug, callback
+
 Fortune.statics.findTop = (options, callback) ->
-    query = @find({}).sort('votes', -1)
+    query = @find().desc("votes")
+    query.limit(options.limit) if options.limit
+    query.execFind (err, fortunes) -> callback?(err, fortunes)
+
+Fortune.statics.findWorst = (options, callback) ->
+    query = @find().asc("votes")
     query.limit(options.limit) if options.limit
     query.execFind (err, fortunes) -> callback?(err, fortunes)
 
