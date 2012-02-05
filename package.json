@@ -7,6 +7,9 @@
         "url": "https://github.com/n1k0/nodetunes.git"
     },
     "author": "Nicolas Perriault <np@akei.com>",
+    "engine": {
+        "node": ">=0.6"
+    },
     "dependencies": {
         "express":                      "2.5.5",
         "coffee-script":                "latest",
@@ -15,6 +18,13 @@
         "validator":                    "0.3.9",
         "mongoose":                     "2.5.0"
     },
+    "keywords": [
+        "demo",
+        "webapp",
+        "express",
+        "mongoose",
+        "coffeescript"
+    ],
     "devDependencies": {
         "docco":  "0.3.0",
         "mocha":  "0.10.2",
