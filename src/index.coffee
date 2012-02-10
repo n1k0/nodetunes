@@ -86,12 +86,17 @@ app.param 'fortuneSlug', (req, res, next, slug) ->
         next()
 
 # Route definitions
-app.get  "/",                          routes.index
-app.get  "/worst",                     routes.worst
-app.get  "/new",                       routes.add
-app.post "/new",                       routes.add
-app.get  "/fortune/:fortuneSlug",      routes.show
-app.get  "/top",                       routes.top
-app.get  "/fortune/:fortuneSlug/down", routes.down
-app.get  "/fortune/:fortuneSlug/up",   routes.up
+# 1. fortunes
+app.get  "/",                          routes.fortune.index
+app.get  "/worst",                     routes.fortune.worst
+app.get  "/new",                       routes.fortune.add
+app.post "/new",                       routes.fortune.add
+app.get  "/fortune/:fortuneSlug",      routes.fortune.show # view
+app.post "/fortune/:fortuneSlug",      routes.fortune.show # comment adding
+app.get  "/top",                       routes.fortune.top
+app.get  "/fortune/:fortuneSlug/down", routes.fortune.down
+app.get  "/fortune/:fortuneSlug/up",   routes.fortune.up
+# 2. comments
+# TODO
+# 3. catch all
 app.get  "*", (req, res) -> res.render '404', status: 404, title: "Not Found"

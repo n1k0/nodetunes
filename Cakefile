@@ -1,4 +1,4 @@
-# Adapted from https://github.com/twilson63/cakefile-template, thanks!
+# Adapted from https://github.com/twilson63/cakefile-template
 
 mongoose       = require('mongoose')
 {print}        = require('util')
@@ -80,7 +80,9 @@ exit = (status) ->
 info = (message) -> log statuses.info, ansi.blue, message
 
 load = (callback) ->
-    Fortune.remove ->
+    Fortune.remove (err) ->
+        if err
+            return callback?(err)
         processed = 0
         info "loading fixtures…"
         for ref, fortune of fortunes
@@ -92,7 +94,7 @@ load = (callback) ->
                             ko "- #{error}: #{err.errors[error].type}"
                     if ++processed == Object.keys(fortunes).length
                         ok "processed #{processed} fixtures."
-                        callback?(err, fortune)
+                        return callback?(err, fortune)
 
 log = (message, color, explanation) ->
     color = ansi[color] || color || ''
@@ -136,7 +138,7 @@ task 'build', 'Build current project', ->
     setup -> build (status) -> exit(1 if status)
 
 task 'casper', 'Launches casperjs test suite', ->
-    setup 'test', -> build -> load -> casper (status) -> exit(1 if status)
+    setup 'test', -> build -> connect -> load -> casper (status) -> exit(1 if status)
 
 task 'docs', 'Generate annotated source code with Docco', ->
     files = utils.findFiles "src",
@@ -148,7 +150,7 @@ task 'funk', 'Fantastic stuff', ->
     setup 'test', -> build -> connect -> load -> test -> load -> casper (status) -> exit(1 if status)
 
 task 'load', 'Load test fixtures', ->
-    setup -> load (err) -> exit(1 if err)
+    setup -> connect -> load (err) -> exit(1 if err)
 
 task 'test', 'Run test suite', ->
     setup 'test', -> build -> connect -> load -> test (status) -> exit(1 if status)

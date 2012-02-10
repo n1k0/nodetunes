@@ -1,12 +1,12 @@
 class Form
-    constructor: (model, data) ->
-        @model = model
+    constructor: (options) ->
+        @model = options.model
         @bound = false
         @valid = undefined
         @values = {}
         @errors = {}
-        if data
-            @bind data
+        if options.data
+            @bind options.data
 
     bind: (params) ->
         for field of params

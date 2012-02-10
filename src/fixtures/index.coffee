@@ -6,6 +6,10 @@ exports.fortunes =
                  <dave> Hello.
                  """
         votes:   10
+        comments: [
+          { author: "John", email: "john@doe.com", content: "Yes?" }
+          { author: "Bob", email: "bob@doe.com", content: "Yes." }
+        ]
     f2:
         title: "Second fortune"
         content: """

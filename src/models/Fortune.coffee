@@ -1,6 +1,41 @@
-mongoose       = require "mongoose"
-{slugify}      = require "../lib/helpers"
+mongoose  = require "mongoose"
+{slugify} = require "../lib/helpers"
 
+### Comment model ###
+Comment = new mongoose.Schema
+    author:
+        type: String
+        trim: true
+        required: true
+        validate: [
+            (v) -> v.length >= 3 and v.length <= 50,
+            "Author name length must be comprised between 3 and 50 chars"
+        ]
+    email:
+        type: String
+        trim: true
+        required: true
+    content:
+        type: String
+        trim: true
+        required: true
+        validate: [
+            (v) -> v.length < 500,
+            "Contents length must be less than 500 chars"
+        ]
+    date: type: Date, default: Date.now, index: true
+
+Comment.path('email').validate (v) ->
+    # "Email length must be comprised between 3 and 255 chars"
+    v.length >= 3 and v.length <= 255
+, "length"
+
+Comment.path('email').validate (v) ->
+    # "Email address is invalid"
+    /^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(v)
+, "regexp"
+
+### Fortune model ###
 Fortune = new mongoose.Schema
     title:
         type: String
@@ -31,6 +66,7 @@ Fortune = new mongoose.Schema
         ]
     votes: type: Number, default: 0, index: true
     date: type: Date, default: Date.now, index: true
+    comments  : [Comment]
 
 Fortune.pre 'validate', (next) ->
     @slug = slugify @title

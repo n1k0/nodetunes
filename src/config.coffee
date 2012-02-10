@@ -1,10 +1,10 @@
 module.exports =
     production:
         mongo:
-            uri: "mongodb://localhost/nodetunes"
+            uri: "mongodb://127.0.0.1/nodetunes"
     development:
         mongo:
-            uri: "mongodb://localhost/nodetunes-dev"
+            uri: "mongodb://127.0.0.1/nodetunes-dev"
     test:
         mongo:
-            uri: "mongodb://localhost/nodetunes-test"
+            uri: "mongodb://127.0.0.1/nodetunes-test"
